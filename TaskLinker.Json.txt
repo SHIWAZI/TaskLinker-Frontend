@@ -1,0 +1,66 @@
+{
+"info": {
+"name": "WorkRoute – REST API Collection",
+"_postman_id": "a1b2c3d4-e5f6-7890-abcd-workroute",
+"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+"description": "REST API collection for WorkRoute backend"
+},
+"variable": [
+{ "key": "baseUrl", "value": "http://localhost:4000/api/v1" },
+{ "key": "accessToken", "value": "" },
+{ "key": "contractorToken", "value": "" },
+{ "key": "taskId", "value": "" }
+],
+"item": [
+
+
+{
+"name": "Auth",
+"item": [
+{
+"name": "Register Client",
+"request": {
+"method": "POST",
+"header": [{ "key": "Content-Type", "value": "application/json" }],
+"body": {
+"mode": "raw",
+"raw": "{\n \"role\": \"client\",\n \"name\": \"Client User\",\n \"email\": \"client@test.com\",\n \"phone\": \"9999999999\",\n \"password\": \"Password123\"\n}"
+},
+"url": "{{baseUrl}}/auth/register"
+}
+},
+{
+"name": "Register Contractor",
+"request": {
+"method": "POST",
+"header": [{ "key": "Content-Type", "value": "application/json" }],
+"body": {
+"mode": "raw",
+"raw": "{\n \"role\": \"contractor\",\n \"name\": \"Contractor User\",\n \"email\": \"contractor@test.com\",\n \"phone\": \"8888888888\",\n \"password\": \"Password123\"\n}"
+},
+"url": "{{baseUrl}}/auth/register"
+}
+},
+{
+"name": "Login (Client)",
+"request": {
+"method": "POST",
+"header": [{ "key": "Content-Type", "value": "application/json" }],
+"body": {
+"mode": "raw",
+"raw": "{\n \"identifier\": \"client@test.com\",\n \"password\": \"Password123\"\n}"
+},
+"url": "{{baseUrl}}/auth/login"
+},
+"event": [
+{
+"listen": "test",
+"script": {
+"exec": [
+"const res = pm.response.json();",
+"pm.environment.set('accessToken', res.accessToken);"
+]
+}
+}
+]
+}
