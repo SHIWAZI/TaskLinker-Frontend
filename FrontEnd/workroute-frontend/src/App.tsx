@@ -4,9 +4,9 @@ import Loader from './components/Loader';
 
 const Login = lazy(() => import('./pages/Login'));
 const Register = lazy(() => import('./pages/Register'));
-// const ClientDashboard = lazy(() => import('./pages/ClientDashboard'));
-// const ContractorDashboard = lazy(() => import('./pages/ContractorDashboard'));
-// const TaskDetails = lazy(() => import('./pages/TaskDetails'));
+const ClientDashboard = lazy(() => import('./pages/ClientDashboard'));
+const TaskDetails = lazy(() => import('./pages/TaskDetails'));
+const ContractorRoutes = lazy(() => import('./routes/ContractorRoutes'));
 
 export default function App() {
   return (
@@ -21,11 +21,11 @@ export default function App() {
           <Route path="/register" element={<Register />} />
 
           {/* dashboards */}
-          {/* <Route path="/client" element={<ClientDashboard />} />
-          <Route path="/contractor" element={<ContractorDashboard />} /> */}
+          <Route path="/client" element={<ClientDashboard />} />
+          <Route path="/contractor/*" element={<ContractorRoutes />} />
 
           {/* task */}
-          {/* <Route path="/tasks/:id" element={<TaskDetails />} /> */}
+          <Route path="/tasks/:id" element={<TaskDetails />} />
 
           {/* fallback */}
           <Route path="*" element={<Navigate to="/login" replace />} />

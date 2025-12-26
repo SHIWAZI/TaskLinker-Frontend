@@ -22,7 +22,6 @@ export default function Login() {
 
       // ⚠️ Backend should return user info
       login(res.accessToken, res.user);
-
       // Role based redirect
       if (res.user.role === 'client') {
         navigate('/client');

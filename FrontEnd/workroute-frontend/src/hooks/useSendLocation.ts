@@ -1,27 +1,45 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { getSocket } from '../socket/socket';
 
-export function useSendLocation(taskId: string, enabled: boolean) {
+type Options = {
+  enabled: boolean;
+  taskId: string;
+};
+
+export function useSendLocation({ enabled, taskId }: Options) {
+  const watchIdRef = useRef<number | null>(null);
+
   useEffect(() => {
-    if (!enabled) return;
+    if (!enabled || !taskId) return;
 
     const socket = getSocket();
-    if (!socket || !taskId) return;
+    if (!socket) return;
 
-    const watchId = navigator.geolocation.watchPosition(
-      (pos) => {
+    // Start watching GPS
+    watchIdRef.current = navigator.geolocation.watchPosition(
+      (position) => {
         socket.emit('location:update', {
           taskId,
-          lat: pos.coords.latitude,
-          lng: pos.coords.longitude
+          lat: position.coords.latitude,
+          lng: position.coords.longitude
         });
       },
-      (err) => console.error(err),
-      { enableHighAccuracy: true }
+      (error) => {
+        console.error('GPS error:', error.message);
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 10000
+      }
     );
 
+    // Cleanup when disabled or unmount
     return () => {
-      navigator.geolocation.clearWatch(watchId);
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
     };
-  }, [taskId, enabled]);
+  }, [enabled, taskId]);
 }
